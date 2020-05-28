@@ -53,7 +53,7 @@ const GameScreen = ({ selectedNumber, onGameOver }) => {
 
 	return (
 		<View style={styles.screen}>
-			<View>
+			<View style={{ width: "80%", maxWidth: 300 }}>
 				<Text style={styles.title}>Opponent guess:</Text>
 				<Text style={styles.number}>{currentGuess}</Text>
 			</View>

@@ -4,9 +4,24 @@ import { Header } from "./components";
 import { StartGameScreen, GameScreen, GameOverScreen } from "./screens";
 import Colors from "./constants/colors";
 
+import * as Font from "expo-font";
+import { AppLoading } from "expo";
+
+const fetchFonts = () => {
+	return Font.loadAsync({
+		roboto: require("./assets/fonts/roboto.ttf"),
+		"roboto-bold": require("./assets/fonts/robotobold.ttf"),
+	});
+};
+
 const App = () => {
+	const [loadedData, setLoadedData] = useState(false);
 	const [guessedNumber, setGuessedNumber] = useState(null);
 	let [rounds, setRounds] = useState(0);
+
+	if (!loadedData) {
+		return <AppLoading startAsync={fetchFonts} onFinish={setLoadedData.bind(this, true)} />;
+	}
 
 	const handleStartButtonClick = selectedNumber => {
 		setGuessedNumber(selectedNumber);

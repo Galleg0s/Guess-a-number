@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Button, Text, TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
 import Colors from "../constants/colors";
+import { Typography } from "../components";
 import { Input } from "../components";
 
 const StartGameScreen = ({ onStartButtonClick }) => {
@@ -40,7 +41,7 @@ const StartGameScreen = ({ onStartButtonClick }) => {
 	return (
 		<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
 			<View style={styles.screen}>
-				<Text style={styles.title}>Enter a number</Text>
+				<Typography style={styles.title}>Enter a number</Typography>
 				<Input
 					onChangeText={handleTextChange}
 					value={enteredValue}
@@ -63,7 +64,9 @@ const StartGameScreen = ({ onStartButtonClick }) => {
 
 				{confirmed && (
 					<View>
-						<Text style={styles.confirmedMessage}>Confirmed number is {selectedNumber}</Text>
+						<Typography style={styles.confirmedMessage}>
+							<Text>Confirmed number is</Text> <Typography fontStyle="bold">{selectedNumber}</Typography>
+						</Typography>
 						<View style={styles.confirmedButton}>
 							<Button
 								onPress={onStartButtonClick.bind(this, selectedNumber)}
