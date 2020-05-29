@@ -1,6 +1,31 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View, Button, Alert } from "react-native";
+import { StyleSheet, Text, View, Button, Alert, ScrollView } from "react-native";
 import Colors from "../constants/colors";
+import { Typography } from "../components";
+
+const renderGuess = (guess, numberOfRound) => {
+	return (
+		<View
+			style={{
+				marginTop: 20,
+				padding: 10,
+				backgroundColor: Colors.darkGreen,
+				fontSize: 16,
+				flexDirection: "row",
+				justifyContent: "space-around",
+				borderRadius: 4,
+			}}
+			key={guess}
+		>
+			<Typography style={{ color: Colors.yellow }}>
+				Round: <Typography fontStyle="bold">{numberOfRound}</Typography>
+			</Typography>
+			<Typography style={{ color: Colors.yellow }}>
+				Guess: <Typography fontStyle="bold">{guess}</Typography>
+			</Typography>
+		</View>
+	);
+};
 
 const generateValueBetween = (min, max, exclude) => {
 	min = Math.ceil(min);
@@ -16,15 +41,16 @@ const generateValueBetween = (min, max, exclude) => {
 };
 
 const GameScreen = ({ selectedNumber, onGameOver }) => {
-	const [currentGuess, setCurrentGuess] = useState(generateValueBetween(1, 100, selectedNumber));
-	let [rounds, setRounds] = useState(0);
+	const firstGuess = generateValueBetween(1, 100, selectedNumber);
+	const [currentGuess, setCurrentGuess] = useState(firstGuess);
+	let [guesses, setGuesses] = useState([firstGuess]);
 
 	const currentLow = useRef(1);
 	const currentHigh = useRef(100);
 
 	useEffect(() => {
 		if (currentGuess === selectedNumber) {
-			onGameOver(rounds);
+			onGameOver(guesses.length);
 		}
 	}, [currentGuess, selectedNumber, onGameOver]);
 
@@ -43,12 +69,12 @@ const GameScreen = ({ selectedNumber, onGameOver }) => {
 		} else if (direction === "Lower") {
 			currentHigh.current = currentGuess;
 		} else if (direction === "Greater") {
-			currentLow.current = currentGuess;
+			currentLow.current = currentGuess + 1;
 		}
 
 		const nextNumber = generateValueBetween(currentLow.current, currentHigh.current, currentGuess);
 		setCurrentGuess(nextNumber);
-		setRounds(rounds => rounds + 1);
+		setGuesses(previousGuesses => [nextNumber, ...previousGuesses]);
 	};
 
 	return (
@@ -60,6 +86,11 @@ const GameScreen = ({ selectedNumber, onGameOver }) => {
 			<View style={styles.buttonsContainer}>
 				<Button title="Lower" color={Colors.orange} onPress={nextGuessHandler.bind(this, "Lower")} />
 				<Button title="Greater" color={Colors.darkOrange} onPress={nextGuessHandler.bind(this, "Greater")} />
+			</View>
+			<View style={styles.guessList}>
+				<ScrollView centerContent>
+					{guesses.map((guess, index) => renderGuess(guess, guesses.length - index))}
+				</ScrollView>
 			</View>
 		</View>
 	);
@@ -94,6 +125,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-around",
 	},
+	guessList: { flex: 1, width: "80%", marginTop: 30 },
 });
 
 export default GameScreen;

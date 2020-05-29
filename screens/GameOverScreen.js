@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, Button, Image } from "react-native";
 import Colors from "../constants/colors";
 import { Typography } from "../components";
+import { FontAwesome } from "@expo/vector-icons";
 
 const GameOverScreen = ({ rounds, number, onGameRestart }) => {
 	return (
@@ -9,6 +10,9 @@ const GameOverScreen = ({ rounds, number, onGameRestart }) => {
 			<Image style={styles.image} source={require("../assets/success.png")} resizeMode="cover" />
 			<View style={styles.screen}>
 				<Typography style={{ ...styles.text, ...styles.title }}>The game is over!</Typography>
+				<Text>
+					<FontAwesome name="gamepad" size={40} color={Colors.darkOrange} />
+				</Text>
 				<Typography style={{ ...styles.text, ...styles.round }}>
 					Your phone needed
 					<Typography fontStyle="bold"> {rounds} </Typography> rounds to guess the number
