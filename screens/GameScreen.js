@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View, Button, Alert, ScrollView } from "react-native";
+import { StyleSheet, Text, View, Button, Alert, ScrollView, useWindowDimensions } from "react-native";
 import Colors from "../constants/colors";
 import { Typography } from "../components";
+import { ScreenOrientation } from "expo";
 
 const renderGuess = (guess, numberOfRound) => {
 	return (
@@ -30,7 +31,6 @@ const renderGuess = (guess, numberOfRound) => {
 const generateValueBetween = (min, max, exclude) => {
 	min = Math.ceil(min);
 	max = Math.floor(max);
-
 	const randomValue = Math.floor(Math.random() * (max - min)) + min;
 
 	if (randomValue === exclude) {
@@ -44,6 +44,7 @@ const GameScreen = ({ selectedNumber, onGameOver }) => {
 	const firstGuess = generateValueBetween(1, 100, selectedNumber);
 	const [currentGuess, setCurrentGuess] = useState(firstGuess);
 	let [guesses, setGuesses] = useState([firstGuess]);
+	const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
 	const currentLow = useRef(1);
 	const currentHigh = useRef(100);
@@ -79,15 +80,30 @@ const GameScreen = ({ selectedNumber, onGameOver }) => {
 
 	return (
 		<View style={styles.screen}>
-			<View style={{ width: "80%", maxWidth: 300 }}>
+			<View
+				style={{
+					width: "80%",
+					maxWidth: 500,
+					minWidth: 300,
+				}}
+			>
 				<Text style={styles.title}>Opponent guess:</Text>
 				<Text style={styles.number}>{currentGuess}</Text>
 			</View>
 			<View style={styles.buttonsContainer}>
-				<Button title="Lower" color={Colors.orange} onPress={nextGuessHandler.bind(this, "Lower")} />
-				<Button title="Greater" color={Colors.darkOrange} onPress={nextGuessHandler.bind(this, "Greater")} />
+				<View style={{ width: windowWidth / 4 }}>
+					<Button title="Lower" color={Colors.orange} onPress={nextGuessHandler.bind(this, "Lower")} />
+				</View>
+
+				<View style={{ width: windowWidth / 4 }}>
+					<Button
+						title="Greater"
+						color={Colors.darkOrange}
+						onPress={nextGuessHandler.bind(this, "Greater")}
+					/>
+				</View>
 			</View>
-			<View style={styles.guessList}>
+			<View style={{ ...styles.guessList, marginTop: windowHeight > 600 ? 30 : 20 }}>
 				<ScrollView centerContent>
 					{guesses.map((guess, index) => renderGuess(guess, guesses.length - index))}
 				</ScrollView>
@@ -120,12 +136,18 @@ const styles = StyleSheet.create({
 	},
 	buttonsContainer: {
 		width: "80%",
-		maxWidth: 300,
+		maxWidth: 500,
+		minWidth: 300,
 		marginTop: 20,
 		flexDirection: "row",
 		justifyContent: "space-around",
 	},
-	guessList: { flex: 1, width: "80%", marginTop: 30 },
+	guessList: {
+		flex: 1,
+		width: "80%",
+		maxWidth: 500,
+		minWidth: 300,
+	},
 });
 
 export default GameScreen;

@@ -15,7 +15,7 @@ const GameOverScreen = ({ rounds, number, onGameRestart }) => {
 				</Text>
 				<Typography style={{ ...styles.text, ...styles.round }}>
 					Your phone needed
-					<Typography fontStyle="bold"> {rounds} </Typography> rounds to guess the number
+					<Typography fontStyle="bold"> {rounds}</Typography> rounds to guess the number
 					<Typography fontStyle="bold"> {number}</Typography>
 				</Typography>
 				<View style={styles.restartButton}>

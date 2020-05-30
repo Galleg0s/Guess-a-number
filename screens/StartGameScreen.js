@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Button, Text, TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
+import {
+	StyleSheet,
+	View,
+	Button,
+	Text,
+	TouchableWithoutFeedback,
+	Keyboard,
+	Alert,
+	useWindowDimensions,
+} from "react-native";
 import Colors from "../constants/colors";
 import { Typography } from "../components";
 import { Input } from "../components";
@@ -8,6 +17,8 @@ const StartGameScreen = ({ onStartButtonClick }) => {
 	const [enteredValue, setEnteredValue] = useState("");
 	const [confirmed, setConfirmed] = useState(false);
 	const [selectedNumber, setSelectedValue] = useState(null);
+	const windowWidth = useWindowDimensions().width;
+	const windowHeight = useWindowDimensions().height;
 
 	const handleTextChange = value => {
 		setEnteredValue(value.replace(/[^0-9]/g, ""));
@@ -54,12 +65,17 @@ const StartGameScreen = ({ onStartButtonClick }) => {
 					inputStyle={styles.input}
 				/>
 				<View style={styles.buttonsContainer}>
-					<Button
-						onPress={handleConfirmButtonClick.bind(this, enteredValue)}
-						title="Confirm"
-						color={Colors.orange}
-					/>
-					<Button onPress={handleResetButtonClick} title="Reset" color={Colors.darkOrange} />
+					<View style={{ width: windowWidth / 4 }}>
+						<Button
+							onPress={handleConfirmButtonClick.bind(this, enteredValue)}
+							title="Confirm"
+							color={Colors.orange}
+						/>
+					</View>
+
+					<View style={{ width: windowWidth / 4 }}>
+						<Button onPress={handleResetButtonClick} title="Reset" color={Colors.darkOrange} />
+					</View>
 				</View>
 
 				{confirmed && (
@@ -69,7 +85,7 @@ const StartGameScreen = ({ onStartButtonClick }) => {
 						</Typography>
 						<View style={styles.confirmedButton}>
 							<Button
-								onPress={onStartButtonClick.bind(this, selectedNumber)}
+								onPress={() => onStartButtonClick(selectedNumber)}
 								title="Start game!"
 								color={Colors.yellow}
 							/>
@@ -95,7 +111,8 @@ const styles = StyleSheet.create({
 	inputContainer: {
 		marginTop: 20,
 		width: "80%",
-		maxWidth: 300,
+		maxWidth: 500,
+		minWidth: 300,
 		padding: 10,
 		color: "red",
 	},
@@ -105,7 +122,8 @@ const styles = StyleSheet.create({
 	},
 	buttonsContainer: {
 		width: "80%",
-		maxWidth: 300,
+		maxWidth: 500,
+		minWidth: 300,
 		marginTop: 20,
 		flexDirection: "row",
 		justifyContent: "space-around",
